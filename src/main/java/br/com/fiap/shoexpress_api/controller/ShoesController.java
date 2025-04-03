@@ -1,7 +1,7 @@
 package br.com.fiap.shoexpress_api.controller;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,33 +22,33 @@ import br.com.fiap.shoexpress_api.model.Shoes;
 @RequestMapping("/shoes")
 public class ShoesController {
 
-    private List<Shoes> shoes_repository = new ArrayList<>();
+    private List<Shoes> shoesRepository = new ArrayList<>();
 
     // 1.Index - Listar todos os sapatos
     @GetMapping
     public List<Shoes> index() {
-        return shoes_repository;
+        return shoesRepository;
     }
 
     // 2.Create - Criar um novo sapato
     @PostMapping
     public ResponseEntity<Shoes> create(@RequestBody Shoes shoes) {
-        shoes_repository.add(shoes);
+        shoesRepository.add(shoes);
         return ResponseEntity.status(201).body(shoes);
     }
 
     // 3.Get - Mostrar sapato pelo {ID}
     @GetMapping("{id}")
-    public Shoes get(@PathVariable int id) {
+    public Shoes get(@PathVariable Long id) {
         return getShoes(id);
     }
 
     // 4.Update - Atualizar sapato pelo {ID}
     @PutMapping("{id}")
-    public Shoes update(@PathVariable int id, @RequestBody Shoes shoes) {
-        shoes_repository.remove(getShoes(id));
+    public Shoes update(@PathVariable Long id, @RequestBody Shoes shoes) {
+        shoesRepository.remove(getShoes(id));
         shoes.setId(id);
-        shoes_repository.add(shoes);
+        shoesRepository.add(shoes);
 
         return shoes;
     }
@@ -56,16 +56,15 @@ public class ShoesController {
     // 5.Delete - Deletar sapato pelo {ID}
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable int id) {
-        shoes_repository.remove(getShoes(id));
+    public void delete(@PathVariable Long id) {
+        shoesRepository.remove(getShoes(id));
     }
 
-    private Shoes getShoes(int id) {
-        return shoes_repository.stream()
-            .filter(s -> s.getId() == id)
-            .findFirst()
-            .orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sapato não encontrado")
-            );
+    private Shoes getShoes(Long id) {
+        return shoesRepository.stream()
+                .filter(s -> s.getId() == id)
+                .findFirst()
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sapato não encontrado"));
     }
 }

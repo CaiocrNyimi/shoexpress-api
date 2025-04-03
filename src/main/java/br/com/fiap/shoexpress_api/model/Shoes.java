@@ -3,24 +3,24 @@ package br.com.fiap.shoexpress_api.model;
 import java.util.Random;
 
 public class Shoes {
-    
-    private int id;
+
+    private Long id;
     private String name;
     private String brand;
     private double price;
 
-    public Shoes(int id, String name, String brand, double price) {
-        this.id = Math.abs(new Random().nextInt());
+    public Shoes(Long id, String name, String brand, double price) {
+        this.id = Math.abs(new Random().nextLong());
         this.name = name;
         this.brand = brand;
         this.price = price;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -36,5 +36,4 @@ public class Shoes {
         return price;
     }
 
-    
 }
