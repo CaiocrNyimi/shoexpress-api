@@ -1,10 +1,9 @@
 package br.com.fiap.shoexpress_api.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,24 +16,27 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import br.com.fiap.shoexpress_api.model.Shoes;
+import br.com.fiap.shoexpress_api.repository.ShoesRepository;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/shoes")
 public class ShoesController {
 
-    private List<Shoes> shoesRepository = new ArrayList<>();
+    @Autowired
+    private ShoesRepository repository;
 
     // 1.Index - Listar todos os sapatos
     @GetMapping
     public List<Shoes> index() {
-        return shoesRepository;
+        return repository.findAll();
     }
 
     // 2.Create - Criar um novo sapato
     @PostMapping
-    public ResponseEntity<Shoes> create(@RequestBody Shoes shoes) {
-        shoesRepository.add(shoes);
-        return ResponseEntity.status(201).body(shoes);
+    @ResponseStatus(HttpStatus.CREATED)
+    public Shoes create(@RequestBody @Valid Shoes shoes) {
+        return repository.save(shoes);
     }
 
     // 3.Get - Mostrar sapato pelo {ID}
@@ -46,25 +48,22 @@ public class ShoesController {
     // 4.Update - Atualizar sapato pelo {ID}
     @PutMapping("{id}")
     public Shoes update(@PathVariable Long id, @RequestBody Shoes shoes) {
-        shoesRepository.remove(getShoes(id));
+        getShoes(id);
         shoes.setId(id);
-        shoesRepository.add(shoes);
-
-        return shoes;
+        return repository.save(shoes);
     }
 
     // 5.Delete - Deletar sapato pelo {ID}
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
-        shoesRepository.remove(getShoes(id));
+        repository.delete(getShoes(id));
     }
 
     private Shoes getShoes(Long id) {
-        return shoesRepository.stream()
-                .filter(s -> s.getId() == id)
-                .findFirst()
-                .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sapato não encontrado"));
+        return repository
+                .findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                "Sapato não encontrado! (ID: " + id + ")"));
     }
 }
