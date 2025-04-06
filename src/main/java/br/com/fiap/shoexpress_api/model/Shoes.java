@@ -1,7 +1,5 @@
 package br.com.fiap.shoexpress_api.model;
 
-import java.util.Random;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,6 +13,7 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 public class Shoes {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,8 +30,17 @@ public class Shoes {
 
     @Positive(message = "O preço deve ser um valor positivo.")
     @DecimalMin(value = "50", message = "O preço deve ser pelo menos 50 reais.")
-    @DecimalMax(value = "100000.00", message = "O preço não pode exceder 100 mil reais.")
+    @DecimalMax(value = "100000.00", message = "O preço não pode passar de 100 mil reais.")
     private double price;
+
+    @NotBlank(message = "URL da imagem é obrigatória!")
+    @Pattern(regexp = "^(http|https)://.*$", message = "A URL da imagem deve começar com http:// ou https://")
+    private String image;
+
+    @NotBlank(message = "Categoria é obrigatória!")
+    @Pattern( regexp = "^(Corrida|Casual|Skate|Basquete|Futebol|Futsal)$", 
+              message = "A categoria deve ser: Corrida, Casual, Skate, Basquete, Futebol ou Futsal.")
+    private String category;
 
     public Long getId() {
         return id;
@@ -46,12 +54,39 @@ public class Shoes {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getBrand() {
         return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
     }
 
     public double getPrice() {
         return price;
     }
 
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
 }
