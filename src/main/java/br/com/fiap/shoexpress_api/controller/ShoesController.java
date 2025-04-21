@@ -3,8 +3,12 @@ package br.com.fiap.shoexpress_api.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.ScrollPosition.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import br.com.fiap.shoexpress_api.model.Shoes;
+import br.com.fiap.shoexpress_api.model.ShoesFilter;
 import br.com.fiap.shoexpress_api.repository.ShoesRepository;
+import br.com.fiap.shoexpress_api.specification.ShoesSpecification;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
@@ -36,10 +42,14 @@ public class ShoesController {
     // 1.Index - Listar todos os sapatos
     @GetMapping
     @Cacheable(value = "shoes")
-    @Operation(summary = "Listar todos sapatos", description = "Lista todos os sapatos do site sem restrição", responses = { @ApiResponse(responseCode = "200", description = "Lista de todos os sapatos") }, tags = "Shoes")
-    public List<Shoes> index() {
-        return repository.findAll();
-    }
+    public Page<Shoes> index (ShoesFilter filter,
+            @PageableDefault(size = 5, sort = "name") Pageable pageable) {
+        return repository.findAll(ShoesSpecification.withFilters(filter), pageable);
+        }
+    // @Operation(summary = "Listar todos sapatos", description = "Lista todos os sapatos do site sem restrição", responses = { @ApiResponse(responseCode = "200", description = "Lista de todos os sapatos") }, tags = "Shoes")
+    // public List<Shoes> index() {
+    //     return repository.findAll();
+    // }
 
     // 2.Create - Criar um novo sapato
     @PostMapping

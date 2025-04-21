@@ -46,7 +46,7 @@ public class Shoes {
     private String image;
 
     @NotBlank(message = "Categoria é obrigatória!")
-    @Pattern( regexp = "^(Corrida|Casual|Skate|Basquete|Futebol|Futsal)$", 
-              message = "A categoria deve ser: Corrida, Casual, Skate, Basquete, Futebol ou Futsal.")
+    @Pattern( regexp = "^(Corrida|Casual|Skate|Basquete|Futebol|Futsal|Treino)$", 
+              message = "A categoria deve ser: Corrida, Casual, Treino, Skate, Basquete, Futebol, Futsal.")
     private String category;
 }
