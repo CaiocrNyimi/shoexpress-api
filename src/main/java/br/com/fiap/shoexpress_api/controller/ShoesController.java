@@ -1,13 +1,10 @@
 package br.com.fiap.shoexpress_api.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.ScrollPosition.Direction;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -42,19 +39,16 @@ public class ShoesController {
     // 1.Index - Listar todos os sapatos
     @GetMapping
     @Cacheable(value = "shoes")
-    public Page<Shoes> index (ShoesFilter filter,
+    public Page<Shoes> index(ShoesFilter filter,
             @PageableDefault(size = 5, sort = "name") Pageable pageable) {
         return repository.findAll(ShoesSpecification.withFilters(filter), pageable);
-        }
-    // @Operation(summary = "Listar todos sapatos", description = "Lista todos os sapatos do site sem restrição", responses = { @ApiResponse(responseCode = "200", description = "Lista de todos os sapatos") }, tags = "Shoes")
-    // public List<Shoes> index() {
-    //     return repository.findAll();
-    // }
+    }
 
     // 2.Create - Criar um novo sapato
     @PostMapping
     @CacheEvict(value = "shoes", allEntries = true)
-    @Operation(summary = "Criar novo sapato", description = "Cria um novo sapato no sistema", responses = { @ApiResponse(responseCode = "201", description = "Sapato criado com sucesso") }, tags = "Shoes")
+    @Operation(summary = "Criar novo sapato", description = "Cria um novo sapato no sistema", responses = {
+            @ApiResponse(responseCode = "201", description = "Sapato criado com sucesso") }, tags = "Shoes")
     @ResponseStatus(HttpStatus.CREATED)
     public Shoes create(@RequestBody @Valid Shoes shoes) {
         return repository.save(shoes);
@@ -62,7 +56,8 @@ public class ShoesController {
 
     // 3.Get - Mostrar sapato pelo {ID}
     @GetMapping("{id}")
-    @Operation(summary = "Mostrar sapato por ID", description = "Retorna um sapato específico por ID", responses = { @ApiResponse(responseCode = "200", description = "Sapato encontrado") }, tags = "Shoes")
+    @Operation(summary = "Mostrar sapato por ID", description = "Retorna um sapato específico por ID", responses = {
+            @ApiResponse(responseCode = "200", description = "Sapato encontrado") }, tags = "Shoes")
     public Shoes get(@PathVariable Long id) {
         return getShoes(id);
     }
@@ -70,7 +65,8 @@ public class ShoesController {
     // 4.Update - Atualizar sapato pelo {ID}
     @PutMapping("{id}")
     @CacheEvict(value = "shoes", allEntries = true)
-    @Operation(summary = "Atualizar sapato por ID", description = "Atualiza um sapato específico por ID", responses = { @ApiResponse(responseCode = "200", description = "Sapato atualizado com sucesso") }, tags = "Shoes")
+    @Operation(summary = "Atualizar sapato por ID", description = "Atualiza um sapato específico por ID", responses = {
+            @ApiResponse(responseCode = "200", description = "Sapato atualizado com sucesso") }, tags = "Shoes")
     public Shoes update(@PathVariable Long id, @RequestBody Shoes shoes) {
         getShoes(id);
         shoes.setId(id);
@@ -80,7 +76,8 @@ public class ShoesController {
     // 5.Delete - Deletar sapato pelo {ID}
     @DeleteMapping("{id}")
     @CacheEvict(value = "shoes", allEntries = true)
-    @Operation(summary = "Deletar sapato por ID", description = "Deleta um sapato específico por ID", responses = { @ApiResponse(responseCode = "204", description = "Sapato deletado com sucesso") }, tags = "Shoes")
+    @Operation(summary = "Deletar sapato por ID", description = "Deleta um sapato específico por ID", responses = {
+            @ApiResponse(responseCode = "204", description = "Sapato deletado com sucesso") }, tags = "Shoes")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         repository.delete(getShoes(id));
@@ -90,6 +87,6 @@ public class ShoesController {
         return repository
                 .findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                "Sapato não encontrado! (ID: " + id + ")"));
+                        "Sapato não encontrado! (ID: " + id + ")"));
     }
 }
