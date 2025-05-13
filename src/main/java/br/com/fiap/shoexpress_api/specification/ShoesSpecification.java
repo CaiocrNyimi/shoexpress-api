@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import br.com.fiap.shoexpress_api.model.Shoes;
 import br.com.fiap.shoexpress_api.model.ShoesFilter;
+import br.com.fiap.shoexpress_api.model.User;
 
 public class ShoesSpecification {
 
@@ -53,6 +54,15 @@ public class ShoesSpecification {
 
             var arrayPredicates = predicates.toArray(new Predicate[0]);
             return cb.and(arrayPredicates);
+        };
+    }
+
+    public static Specification<Shoes> byUser(User user) {
+        return (root, query, criteriaBuilder) -> {
+            if (user == null) {
+                return criteriaBuilder.conjunction();
+            }
+            return criteriaBuilder.equal(root.get("user"), user);
         };
     }
     

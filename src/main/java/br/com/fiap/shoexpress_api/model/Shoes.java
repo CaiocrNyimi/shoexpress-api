@@ -1,9 +1,12 @@
 package br.com.fiap.shoexpress_api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
@@ -49,4 +52,8 @@ public class Shoes {
     @Pattern( regexp = "^(Corrida|Casual|Skate|Basquete|Futebol|Futsal|Treino)$", 
               message = "A categoria deve ser: Corrida, Casual, Treino, Skate, Basquete, Futebol, Futsal.")
     private String category;
+
+    @JsonIgnore
+    @ManyToOne
+    private User user;
 }
